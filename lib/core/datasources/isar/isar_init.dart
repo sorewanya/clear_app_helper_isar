@@ -12,14 +12,30 @@ class IsarInit {
   late final Isar _isar;
   bool _inited = false;
 
-  IsarInit._internal(SharedPreferencesHelper prefsHelper, List<CollectionSchema<dynamic>> schemas, String dbFileName) {
+  IsarInit._internal({
+    required SharedPreferencesHelper prefsHelper,
+    required List<CollectionSchema<dynamic>> schemas,
+    required String dbFileName,
+    required bool inspector,
+    required int maxSizeMiB,
+    required bool relaxedDurability,
+    required CompactCondition? compactOnLaunch,
+  }) {
     getApplicationDocumentsDirectory().then((dir) {
       var isarDBdirectory = prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
       schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
 
       ///create dir if not exist
       Directory(isarDBdirectory).create().then((dirCreate) {
-        _isar = Isar.openSync(schemas, name: dbFileName, inspector: false, directory: isarDBdirectory);
+        _isar = Isar.openSync(
+          schemas,
+          name: dbFileName,
+          inspector: inspector,
+          directory: isarDBdirectory,
+          compactOnLaunch: compactOnLaunch,
+          maxSizeMiB: maxSizeMiB,
+          relaxedDurability: relaxedDurability,
+        );
         IsarSettingsHelper(_isar);
       });
       _inited = true;
@@ -31,7 +47,21 @@ class IsarInit {
     required SharedPreferencesHelper prefsHelper,
     required List<CollectionSchema<dynamic>> schemas,
     required String dbFileName,
-  }) => _instance ?? IsarInit._internal(prefsHelper, schemas, dbFileName);
+    bool inspector = false,
+    int maxSizeMiB = Isar.defaultMaxSizeMiB,
+    bool relaxedDurability = true,
+    CompactCondition? compactOnLaunch,
+  }) =>
+      _instance ??
+      IsarInit._internal(
+        prefsHelper: prefsHelper,
+        schemas: schemas,
+        dbFileName: dbFileName,
+        inspector: inspector,
+        compactOnLaunch: compactOnLaunch,
+        maxSizeMiB: maxSizeMiB,
+        relaxedDurability: relaxedDurability,
+      );
   Isar get isar => _isar;
   bool get inited => _inited;
 }
