@@ -79,12 +79,15 @@ class _MyAppState extends State<MyApp> {
       // return MultiBlocProvider(
       //   providers: getBlocProviders(),
       //   child: DeviceCheck(
+      //     ///
+      //     ///SEE MyThemeData info for add package:sizer and make all in app more flexible
+      //     ///
       //     child: GetMaterialApp(
       //       debugShowCheckedModeBanner: false,
       //       title: '====APP NAME====',
-      //       themeMode: ThemeMode.system,
-      //       theme: getThemeDataLight(),
-      //       darkTheme: getThemeDataDark(),
+      //       themeMode: GetIt.instance<MyThemeData>().mode,
+      //       theme: GetIt.instance<MyThemeData>().light,
+      //       darkTheme: GetIt.instance<MyThemeData>().dark,
       //       home: BaseWidget(),
       //       getPages: [
       //         GetPage(name: '/', page: () => const BaseWidget()),

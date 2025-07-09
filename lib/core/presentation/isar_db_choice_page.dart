@@ -40,8 +40,8 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
       debugShowCheckedModeBanner: false,
       title: GetIt.instance<CoreI18n>().defaultAppBarTitle,
       themeMode: ThemeMode.system,
-      theme: getThemeDataLight(),
-      darkTheme: getThemeDataDark(),
+      theme: GetIt.instance<MyThemeData>().light,
+      darkTheme: GetIt.instance<MyThemeData>().dark,
       home: MyScaffoldWidget(
         body: Column(
           children: [
