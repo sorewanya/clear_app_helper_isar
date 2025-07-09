@@ -6,6 +6,7 @@ import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_setting
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class IsarInit {
   static IsarInit? _instance;
@@ -24,6 +25,10 @@ class IsarInit {
     getApplicationDocumentsDirectory().then((dir) {
       var isarDBdirectory = prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
       schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
+
+      (Permission.storage.request().isDenied).then((value) {
+        if (value == true) throw Exception("Permission.storage.request().isDenied return true");
+      });
 
       ///create dir if not exist
       Directory(isarDBdirectory).create().then((dirCreate) {

@@ -7,6 +7,7 @@ import 'package:clear_app_helper/core/presentation/theme_data.dart';
 import 'package:clear_app_helper/core/presentation/widgets/my_scaffold_widget.dart';
 import 'package:clear_app_helper/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class IsarDbChoicePage extends StatefulWidget {
   const IsarDbChoicePage({
@@ -46,6 +47,14 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
           children: [
             Text(GetIt.instance<IsarI18n>().isarDbChoiceTitle),
             Text("${GetIt.instance<IsarI18n>().isarDbChoiceDefaultPathTopic}: $isarDBdirectory"),
+            FutureBuilder(
+              future: Permission.storage.request().isDenied,
+              builder: (context, asyncSnapshot) {
+                return asyncSnapshot.data == false
+                    ? SizedBox()
+                    : Text(GetIt.instance<IsarI18n>().storageIsDeniedWarning);
+              },
+            ),
             TextButton(
               onPressed: (() {
                 FilePicker.platform.getDirectoryPath().then((value) {
