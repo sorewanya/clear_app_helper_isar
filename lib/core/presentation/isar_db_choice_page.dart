@@ -59,9 +59,11 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
               onPressed: (() {
                 FilePicker.platform.getDirectoryPath().then((value) {
                   if (value != null) {
-                    setState(() {
-                      isarDBdirectory = value;
-                    });
+                    if (mounted) {
+                      setState(() {
+                        isarDBdirectory = value;
+                      });
+                    }
                   }
                 });
               }),
