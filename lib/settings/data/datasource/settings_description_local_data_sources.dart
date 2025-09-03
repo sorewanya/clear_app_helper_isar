@@ -93,4 +93,10 @@ class SettingsDescriptionLocalDataSource
     final itemId = await dbHelper.update(item: IsarSettingsDescription.fromEntity(entity: item));
     return itemId;
   }
+
+  @override
+  Stream<List<SettingsDescriptionEntity>?> watch(SettingsDescriptionSearchEntity searchEntity) {
+    final result = _filtr(searchEntity);
+    return result.watch(fireImmediately: true);
+  }
 }

@@ -119,4 +119,10 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
     );
     return itemId;
   }
+
+  @override
+  Stream<List<SettingsEntity>?> watch(SettingsSearchEntity searchEntity) {
+    final result = _filtr(searchEntity);
+    return result.watch(fireImmediately: true);
+  }
 }
