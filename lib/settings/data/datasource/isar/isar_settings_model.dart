@@ -100,6 +100,7 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsToJson(this);
   @override
+  @ignore
   get copyWith => _$IsarSettingsCWProxyImpl(this);
 }
 
@@ -130,5 +131,6 @@ class IsarSettingsLog with EquatableMixin implements IsarLog {
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsLogToJson(this);
   @override
+  @ignore
   get copyWith => throw UnsupportedError('copyWith not implemented $runtimeType');
 }

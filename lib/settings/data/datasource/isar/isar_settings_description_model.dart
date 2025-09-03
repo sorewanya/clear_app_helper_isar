@@ -38,5 +38,6 @@ class IsarSettingsDescription with EquatableMixin implements SettingsDescription
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsDescriptionToJson(this);
   @override
+  @ignore
   get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
 }
