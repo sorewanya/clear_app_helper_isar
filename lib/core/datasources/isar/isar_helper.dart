@@ -2,7 +2,7 @@ import 'package:clear_app_helper/core/datasources/db_helper.dart';
 import 'package:clear_app_helper/core/domain/entities/app_entity.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_setting_and_stream.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_settings_helper.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 class IsarHelper<T extends AppEntity> extends DBHelper<T> {
   /// Isar instance. use [IsarInit]

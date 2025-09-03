@@ -1,5 +1,5 @@
 import 'package:clear_app_helper/core/hash_func.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:clear_app_helper/core/datasources/default_data.dart';
 
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_helper.dart';

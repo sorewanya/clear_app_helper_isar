@@ -6,7 +6,7 @@ import 'package:clear_app_helper_isar/settings/data/datasource/settings_descript
 import 'package:clear_app_helper_isar/settings/data/datasource/settings_local_data_sources.dart';
 
 import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 final getIt = GetIt.instance;
 

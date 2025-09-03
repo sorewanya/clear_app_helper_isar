@@ -4,7 +4,6 @@ version: 0.1.0
 homepage: null
 publish_to: none
 
-isar_version: &isar_version 3.1.8
 
 environment:
   sdk: ^3.8.1
@@ -19,23 +18,25 @@ dependencies:
       url: https://github.com/sorewanya/clear_app_helper.git
       ref: main
   path_provider: ^2.1.5
-  isar: 
-    version: *isar_version
-    hosted: https://pub.isar-community.dev/
-  isar_flutter_libs: 
-    version: *isar_version
-    hosted: https://pub.isar-community.dev/
+  isar_community: ^3.3.0-dev.1
+  isar_community_flutter_libs: ^3.3.0-dev.1
   file_picker: ^10.2.0
   get_it: ^8.0.3
   permission_handler: ^12.0.1
+  json_annotation: 
+  equatable: 
+  copy_with_extension:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  isar_generator: 
+  isar_community_generator: 
     git:
-      url: https://github.com/callumw-k/isar
-      ref: v3
-      path: packages/isar_generator
+      url: https://github.com/callumw-k/isar-community
+      ref: migrating-to-source_gen-3
+      path: packages/isar_community_generator
+  copy_with_extension_gen:
+  json_serializable: 
+
 flutter:

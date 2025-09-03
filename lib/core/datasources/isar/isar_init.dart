@@ -4,7 +4,7 @@ import 'package:clear_app_helper/shared_preferences.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_settings_helper.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_description_model.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_model.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
