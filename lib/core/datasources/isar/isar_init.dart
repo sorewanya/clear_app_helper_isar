@@ -12,6 +12,13 @@ class IsarInit {
   static IsarInit? _instance;
   late final Isar _isar;
   bool _inited = false;
+  final SharedPreferencesHelper _prefsHelper;
+  final List<CollectionSchema<dynamic>> _schemas;
+  final String _dbFileName;
+  final bool _inspector;
+  final int _maxSizeMiB;
+  final bool _relaxedDurability;
+  final CompactCondition? _compactOnLaunch;
 
   IsarInit._internal({
     required SharedPreferencesHelper prefsHelper,
@@ -21,31 +28,14 @@ class IsarInit {
     required int maxSizeMiB,
     required bool relaxedDurability,
     required CompactCondition? compactOnLaunch,
-  }) {
-    getApplicationDocumentsDirectory().then((dir) {
-      var isarDBdirectory = prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
-      schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
-
-      (Permission.storage.request().isDenied).then((value) {
-        if (value == true) throw Exception("Permission.storage.request().isDenied return true");
-      });
-
-      ///create dir if not exist
-      Directory(isarDBdirectory).create().then((dirCreate) {
-        _isar = Isar.openSync(
-          schemas,
-          name: dbFileName,
-          inspector: inspector,
-          directory: isarDBdirectory,
-          compactOnLaunch: compactOnLaunch,
-          maxSizeMiB: maxSizeMiB,
-          relaxedDurability: relaxedDurability,
-        );
-        IsarSettingsHelper(_isar);
-      });
-      _inited = true;
-      _instance = this;
-    });
+  }) : _prefsHelper = prefsHelper,
+       _schemas = schemas,
+       _dbFileName = dbFileName,
+       _inspector = inspector,
+       _maxSizeMiB = maxSizeMiB,
+       _relaxedDurability = relaxedDurability,
+       _compactOnLaunch = compactOnLaunch {
+    _instance = this;
   }
 
   factory IsarInit({
@@ -67,6 +57,54 @@ class IsarInit {
         maxSizeMiB: maxSizeMiB,
         relaxedDurability: relaxedDurability,
       );
-  Isar get isar => _isar;
+
+  Future<void> initialize() async {
+    if (_inited) return;
+
+    //TODO todo external storage support
+    final bool useExternalStorage = false;
+    // final externalDir = await getExternalStorageDirectory();
+    final Directory dir = await getApplicationDocumentsDirectory();
+    String isarDBdirectory = _prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
+
+    _schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
+
+    // Request permission if needed
+    // if (useExternalStorage) {
+    //   // only if use external storage
+    //   final status = await Permission.storage.request();
+    //   if (status.isDenied) {
+    //     throw Exception("Storage permission denied");
+    //   }
+    //   isarDBdirectory = '${externalDir?.path}/.isarDB';
+    // }
+
+    // Create directory if not exists
+    final Directory dbDir = Directory(isarDBdirectory);
+    if (!await dbDir.exists()) {
+      await dbDir.create(recursive: true);
+    }
+
+    _isar = await Isar.open(
+      // Use async open
+      _schemas,
+      name: _dbFileName,
+      inspector: _inspector,
+      directory: isarDBdirectory,
+      compactOnLaunch: _compactOnLaunch,
+      maxSizeMiB: _maxSizeMiB,
+      relaxedDurability: _relaxedDurability,
+    );
+    IsarSettingsHelper(_isar); // Initialize settings helper with the opened Isar instance
+    _inited = true; // Set true only after Isar is fully open
+  }
+
+  Isar get isar {
+    if (!_inited) {
+      throw StateError('Isar database has not been initialized. Call initialize() first.');
+    }
+    return _isar;
+  }
+
   bool get inited => _inited;
 }
