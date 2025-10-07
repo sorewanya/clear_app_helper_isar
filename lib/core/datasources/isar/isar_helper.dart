@@ -50,15 +50,15 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
     required List<T> Function() itemList,
     int? idToEmptyCheck,
     Function()? doIfAddDefaultsInsideTxn,
-  }) {
+  }) async {
     if (isarColection.countSync() == 0) {
-      return isar.writeTxn(() {
-        var r = isarColection.putAll(itemList());
+      return isar.writeTxn(() async {
+        var r = await isarColection.putAll(itemList());
         if (doIfAddDefaultsInsideTxn != null) doIfAddDefaultsInsideTxn();
         return r;
       });
     }
-    return null;
+    return [];
   }
 
   @override
