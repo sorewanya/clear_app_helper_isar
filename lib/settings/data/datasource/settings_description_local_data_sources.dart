@@ -1,13 +1,12 @@
-import 'package:clear_app_helper/core/hash_func.dart';
-import 'package:isar_community/isar.dart';
 import 'package:clear_app_helper/core/datasources/default_data.dart';
-
-import 'package:clear_app_helper_isar/core/datasources/isar/isar_helper.dart';
-import 'package:clear_app_helper_isar/core/datasources/isar/isar_local_data_source.dart';
 import 'package:clear_app_helper/core/domain/entities/settings_enum.dart';
-import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_description_model.dart';
+import 'package:clear_app_helper/core/hash_func.dart';
 import 'package:clear_app_helper/settings/domain/entities/search/settings_description_search_entity.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_description_entity.dart';
+import 'package:clear_app_helper_isar/core/datasources/isar/isar_helper.dart';
+import 'package:clear_app_helper_isar/core/datasources/isar/isar_local_data_source.dart';
+import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_description_model.dart';
+import 'package:isar_community/isar.dart';
 
 class SettingsDescriptionLocalDataSource
     extends IsarLocalDataSource<SettingsDescriptionEntity, SettingsDescriptionSearchEntity> {
@@ -57,35 +56,35 @@ class SettingsDescriptionLocalDataSource
   @override
   Future<List<IsarSettingsDescription>> getAll(SettingsDescriptionSearchEntity searchEntity) async {
     final result = _filtr(searchEntity);
-    return await isarInit.isar.txn(() async {
-      return await result.findAll();
+    return isarInit.isar.txn(() async {
+      return result.findAll();
     });
   }
 
   @override
   Future<List<int>> getAllIds(SettingsDescriptionSearchEntity searchEntity) async {
     final result = _filtr(searchEntity);
-    return await isarInit.isar.txn(() async {
-      return await result.idProperty().findAll();
+    return isarInit.isar.txn(() async {
+      return result.idProperty().findAll();
     });
   }
 
   @override
   Future<int> countOfFinded(SettingsDescriptionSearchEntity searchEntity) async {
     final result = _filtr(searchEntity);
-    return await isarInit.isar.txn(() async {
+    return isarInit.isar.txn(() async {
       return result.count();
     });
   }
 
   @override
   Future<List<int>> addMany(List<SettingsDescriptionEntity> itemList) async {
-    return await dbHelper.addMany(itemList: IsarSettingsDescription.fromEntityList(itemList));
+    return dbHelper.addMany(itemList: IsarSettingsDescription.fromEntityList(itemList));
   }
 
   @override
   Future<int> add(SettingsDescriptionEntity item) async {
-    return await dbHelper.add(item: IsarSettingsDescription.fromEntity(entity: item));
+    return dbHelper.add(item: IsarSettingsDescription.fromEntity(entity: item));
   }
 
   @override

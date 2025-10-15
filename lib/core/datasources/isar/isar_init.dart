@@ -6,7 +6,6 @@ import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_setting
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_model.dart';
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class IsarInit {
   static IsarInit? _instance;
@@ -62,10 +61,10 @@ class IsarInit {
     if (_inited) return;
 
     //TODO todo external storage support
-    final bool useExternalStorage = false;
+    // final bool useExternalStorage = false;
     // final externalDir = await getExternalStorageDirectory();
     final Directory dir = await getApplicationDocumentsDirectory();
-    String isarDBdirectory = _prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
+    final String isarDBdirectory = _prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
 
     _schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
 
@@ -81,7 +80,7 @@ class IsarInit {
 
     // Create directory if not exists
     final Directory dbDir = Directory(isarDBdirectory);
-    if (!await dbDir.exists()) {
+    if (!dbDir.existsSync()) {
       await dbDir.create(recursive: true);
     }
 

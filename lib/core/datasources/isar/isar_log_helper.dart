@@ -2,8 +2,8 @@ import 'package:clear_app_helper/core/datasources/db_helper.dart';
 import 'package:clear_app_helper/core/domain/entities/settings_enum.dart';
 import 'package:clear_app_helper/settings/domain/entities/enums_of_settings.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_entity.dart';
-import 'package:clear_app_helper_isar/core/datasources/isar/isar_log.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_helper.dart';
+import 'package:clear_app_helper_isar/core/datasources/isar/isar_log.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_setting_and_stream.dart';
 
 class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
@@ -38,7 +38,7 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
       return (null, null);
     } else {
       final limit = SettingsValue.fromEntity(globalLoggingSizeLimitType?.setting);
-      if (limit?.getUserOrDefaultValueStringOrEmpty == "disabled") return (null, null);
+      if (limit?.getUserOrDefaultValueStringOrEmpty == 'disabled') return (null, null);
       //0 - no limit
       globalLoggingSizeLimitCount ??= IsarSettingAndStream(
         name: CoreSettingsEnum.globalLoggingSizeLimitCount.name,
@@ -54,14 +54,16 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
   ///  filtredById = isarInit.isar.isarTaskLogs.filter().itemIdEqualTo(id).sortByTimestamp()
   ///  T = IsarTaskLog
   @override
-  Future checkAndRemoveByCount(int count, bool byItem, int id) async {
+  Future<void> checkAndRemoveByCount(int count, bool byItem, int id) async {
     if (T is! IsarLog) return;
     final isarCount = byItem
-        ? (isarColection as dynamic).filter().itemIdEqualTo(id).countSync()
+        // ignore: avoid_dynamic_calls
+        ? (isarColection as dynamic).filter().itemIdEqualTo(id).countSync() as int? ?? 0
         : isarColection.countSync();
     if (count < isarCount) {
       byItem
           ? await isar.writeTxn(
+              // ignore: avoid_dynamic_calls
               () async => await (isarColection as dynamic)
                   .filter()
                   .itemIdEqualTo(id)
@@ -71,6 +73,7 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
             )
           : await isar.writeTxn(
               () async =>
+                  // ignore: avoid_dynamic_calls
                   await (isarColection as dynamic).where().sortByTimestamp().limit(isarCount - count).deleteAll(),
             );
     }

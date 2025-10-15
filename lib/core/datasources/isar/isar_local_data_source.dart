@@ -4,13 +4,14 @@ import 'package:clear_app_helper/core/domain/entities/app_entity.dart';
 import 'package:clear_app_helper/core/domain/entities/search_entity.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_init.dart';
 
+// ignore: avoid_types_as_parameter_names
 abstract class IsarLocalDataSource<Type extends AppEntity, SEType extends SearchEntity>
     extends LocalDataSource<Type, SEType> {
   final IsarInit isarInit;
 
   IsarLocalDataSource(this.isarInit);
   @override
-  setHelpers(DBHelper<Type> dbHelper, [DBLogsHelper? dbLogsHelper]) {
+  void setHelpers(DBHelper<Type> dbHelper, [DBLogsHelper? dbLogsHelper]) {
     this.dbHelper = dbHelper;
     this.dbLogsHelper = dbLogsHelper;
   }
@@ -18,8 +19,8 @@ abstract class IsarLocalDataSource<Type extends AppEntity, SEType extends Search
   @override
   Future<List<int>> getAllIds(SEType searchEntity);
   @override
-  Future<dynamic> getById(int id) async {
-    return await dbHelper.getById(id: id);
+  Future<Type?> getById(int id) async {
+    return dbHelper.getById(id: id);
   }
 
   @override

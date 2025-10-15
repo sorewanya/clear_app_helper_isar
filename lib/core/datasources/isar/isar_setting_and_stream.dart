@@ -6,7 +6,7 @@ import 'package:isar_community/isar.dart';
 class IsarSettingAndStream {
   final String name;
 
-  ///Isar instance. use [IsarInit]
+  ///Isar instance. use [`IsarInit`]
   final Isar isar;
 
   Stream<SettingsEntity?>? _stream;

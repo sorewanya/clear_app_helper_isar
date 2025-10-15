@@ -1,20 +1,19 @@
 import 'package:clear_app_helper/core/i18n/core_i18n.dart';
-import 'package:clear_app_helper_isar/core/i18n/isar_i18n.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-
 import 'package:clear_app_helper/core/presentation/theme_data.dart';
 import 'package:clear_app_helper/core/presentation/widgets/my_scaffold_widget.dart';
 import 'package:clear_app_helper/shared_preferences.dart';
+import 'package:clear_app_helper_isar/core/i18n/isar_i18n.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class IsarDbChoicePage extends StatefulWidget {
   const IsarDbChoicePage({
-    super.key,
     required this.isarDBdirectory,
     required this.sharedPreferencesHelper,
     required this.setDirectory,
+    super.key,
   });
   final String isarDBdirectory;
   final SharedPreferencesHelper sharedPreferencesHelper;
@@ -25,7 +24,7 @@ class IsarDbChoicePage extends StatefulWidget {
 }
 
 class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
-  String isarDBdirectory = "";
+  String isarDBdirectory = '';
   SharedPreferencesHelper? prefsHelper;
   @override
   void initState() {
@@ -39,14 +38,13 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: GetIt.instance<CoreI18n>().defaultAppBarTitle,
-      themeMode: ThemeMode.system,
       theme: GetIt.instance<MyThemeData>().light,
       darkTheme: GetIt.instance<MyThemeData>().dark,
       home: MyScaffoldWidget(
         body: Column(
           children: [
             Text(GetIt.instance<IsarI18n>().isarDbChoiceTitle),
-            Text("${GetIt.instance<IsarI18n>().isarDbChoiceDefaultPathTopic}: $isarDBdirectory"),
+            Text('${GetIt.instance<IsarI18n>().isarDbChoiceDefaultPathTopic}: $isarDBdirectory'),
             FutureBuilder(
               future: Permission.storage.request().isDenied,
               builder: (context, asyncSnapshot) {
@@ -56,7 +54,7 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
               },
             ),
             TextButton(
-              onPressed: (() {
+              onPressed: () {
                 FilePicker.platform.getDirectoryPath().then((value) {
                   if (value != null) {
                     if (mounted) {
@@ -66,15 +64,15 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
                     }
                   }
                 });
-              }),
+              },
               child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathButton),
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: (() async {
+              onPressed: () async {
                 await prefsHelper?.prefs.setString('isarDBdirectory', isarDBdirectory);
                 widget.setDirectory();
-              }),
+              },
               child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathConfirmButton),
             ),
           ],

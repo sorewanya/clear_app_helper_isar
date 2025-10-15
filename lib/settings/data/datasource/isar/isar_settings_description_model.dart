@@ -1,9 +1,8 @@
+import 'package:clear_app_helper/settings/domain/entities/settings_description_entity.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:isar_community/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'package:clear_app_helper/settings/domain/entities/settings_description_entity.dart';
 
 part 'isar_settings_description_model.g.dart';
 
@@ -39,5 +38,5 @@ class IsarSettingsDescription with EquatableMixin implements SettingsDescription
   Map<String, dynamic> toJson() => _$IsarSettingsDescriptionToJson(this);
   @override
   @ignore
-  get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
+  dynamic get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
 }
