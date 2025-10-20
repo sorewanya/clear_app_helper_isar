@@ -1,4 +1,5 @@
 import 'package:clear_app_helper/core/datasources/db_helper.dart';
+import 'package:clear_app_helper/core/domain/entities/app_entity.dart';
 import 'package:clear_app_helper/core/domain/entities/settings_enum.dart';
 import 'package:clear_app_helper/settings/domain/entities/enums_of_settings.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_entity.dart';
@@ -80,13 +81,13 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
   }
 
   @override
-  Future<int> addLog({required item, required id}) async {
+  Future<int> addLog({required AppEntity item, required int id}) async {
     if (!isLoggingEnabled()) return 0;
     final (type, count) = loggingSizeLimited();
     if (type == null) return 0;
     if (count != null && count != 0) {
-      await checkAndRemoveByCount(count, (type == 1) ? true : false, id);
+      await checkAndRemoveByCount(count, type == 1, id);
     }
-    return await super.add(item: item);
+    return super.add(item: item);
   }
 }

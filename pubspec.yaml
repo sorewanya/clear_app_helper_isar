@@ -11,9 +11,10 @@ environment:
 
 dependencies:
   clear_app_helper:
-    git:
-      url: https://github.com/sorewanya/clear_app_helper.git
-      ref: main
+    path: ../clear_app_helper
+    # git:
+    #   url: https://github.com/sorewanya/clear_app_helper.git
+    #   ref: main
   copy_with_extension:
   equatable: 
   file_picker: ^10.2.0

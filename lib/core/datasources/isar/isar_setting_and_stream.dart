@@ -25,7 +25,7 @@ class IsarSettingAndStream {
     _stream?.listen((event) => setting = event);
   }
 
-  String get userOrDefaultValue => setting?.getUserOrDefaultValueAsString ?? "";
+  String get userOrDefaultValue => setting?.getUserOrDefaultValueAsString ?? '';
   String? get userOrDefaultValueOrNull => setting?.getUserOrDefaultValueAsString;
   bool? get userOrDefaultValueAsBool => SettingsBool.fromEntity(setting)?.getUserOrDefaultValueAsBool;
 }

@@ -27,7 +27,7 @@ class SettingsDescriptionLocalDataSource
     dbHelper.addManyDefault(
       itemList: () {
         final itemsNotReseted = list.where(
-          (element) => defaults.getDefaultSettingDescriptionList.where((e) => e.id == element.id).isEmpty == true,
+          (element) => defaults.getDefaultSettingDescriptionList.where((e) => e.id == element.id).isEmpty,
         );
         defaults.getDefaultSettingDescriptionList.addAll(itemsNotReseted);
         return defaults.getDefaultSettingDescriptionList;

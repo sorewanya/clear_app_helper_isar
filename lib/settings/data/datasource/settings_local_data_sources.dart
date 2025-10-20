@@ -63,7 +63,7 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
           (q) => q.userValueContains(searchEntity.userValue!, caseSensitive: caseSensitive),
         )
         .optional(searchEntity.type != null, (q) => q.typeEqualTo(searchEntity.type!))
-        .optional(searchEntity.confirmType != null, (q) => q.confirmTypeEqualTo(searchEntity.confirmType!))
+        .optional(searchEntity.confirmType != null, (q) => q.confirmTypeEqualTo(searchEntity.confirmType))
         .optional(
           searchEntity.isDeleted != null && searchEntity.id == null,
           (q) => q.isDeletedEqualTo(searchEntity.isDeleted!),

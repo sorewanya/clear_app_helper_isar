@@ -33,6 +33,8 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
     super.initState();
   }
 
+  ///FIXME добавь проверку папки на возможность записи!
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

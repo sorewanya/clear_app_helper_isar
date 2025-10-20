@@ -53,7 +53,7 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
   }) async {
     if (isarColection.countSync() == 0) {
       return isar.writeTxn(() async {
-        var r = await isarColection.putAll(itemList());
+        final r = await isarColection.putAll(itemList());
         if (doIfAddDefaultsInsideTxn != null) doIfAddDefaultsInsideTxn();
         return r;
       });

@@ -14,6 +14,7 @@ part 'isar_settings_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
+// ignore: avoid_implementing_value_types
 class IsarSettings with EquatableMixin implements SettingsEntity {
   @override
   Id get id => fastHash(name);
@@ -105,6 +106,7 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
 
 @Collection(inheritance: false)
 @JsonSerializable()
+// ignore: must_be_immutable
 class IsarSettingsLog with EquatableMixin implements IsarLog {
   @override
   Id? id;

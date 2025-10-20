@@ -9,6 +9,7 @@ part 'isar_settings_description_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
+// ignore: avoid_implementing_value_types
 class IsarSettingsDescription with EquatableMixin implements SettingsDescriptionEntity {
   @override
   final Id id;
