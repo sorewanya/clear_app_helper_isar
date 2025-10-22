@@ -8,7 +8,7 @@ import 'package:clear_app_helper_isar/core/datasources/isar/isar_log.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_setting_and_stream.dart';
 
 class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
-  IsarLogsHelper({required super.isar, required super.isarColection, this.loggingSettings});
+  IsarLogsHelper({required super.isar, required super.isarCollection, this.loggingSettings});
 
   final EnumsOfSettings? loggingSettings;
   IsarSettingAndStream? globalLoggingSizeLimitType;
@@ -18,9 +18,9 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
   bool isLoggingEnabled() {
     ///Check logging enable in settings
     if (loggingSettings != null) {
-      curentLoggingEnable ??= IsarSettingAndStream(name: loggingSettings!.name, isar: isar);
+      currentLoggingEnable ??= IsarSettingAndStream(name: loggingSettings!.name, isar: isar);
     }
-    return curentLoggingEnable?.userOrDefaultValueAsBool ??
+    return currentLoggingEnable?.userOrDefaultValueAsBool ??
         isarSettingsHelper.globalLoggingEnable?.userOrDefaultValueAsBool ??
         false;
   }
@@ -59,13 +59,13 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
     if (T is! IsarLog) return;
     final isarCount = byItem
         // ignore: avoid_dynamic_calls
-        ? (isarColection as dynamic).filter().itemIdEqualTo(id).countSync() as int? ?? 0
-        : isarColection.countSync();
+        ? (isarCollection as dynamic).filter().itemIdEqualTo(id).countSync() as int? ?? 0
+        : isarCollection.countSync();
     if (count < isarCount) {
       byItem
           ? await isar.writeTxn(
               // ignore: avoid_dynamic_calls
-              () async => await (isarColection as dynamic)
+              () async => await (isarCollection as dynamic)
                   .filter()
                   .itemIdEqualTo(id)
                   .sortByTimestamp()
@@ -75,7 +75,7 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
           : await isar.writeTxn(
               () async =>
                   // ignore: avoid_dynamic_calls
-                  await (isarColection as dynamic).where().sortByTimestamp().limit(isarCount - count).deleteAll(),
+                  await (isarCollection as dynamic).where().sortByTimestamp().limit(isarCount - count).deleteAll(),
             );
     }
   }

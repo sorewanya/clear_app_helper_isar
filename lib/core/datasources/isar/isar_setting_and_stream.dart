@@ -11,7 +11,7 @@ class IsarSettingAndStream {
 
   Stream<SettingsEntity?>? _stream;
 
-  /// curent setting from [name]
+  /// current setting from [name]
   SettingsEntity? setting;
 
   ///[name] - setting name

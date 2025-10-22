@@ -14,7 +14,7 @@ class SettingsDescriptionLocalDataSource
   final SettingsDefaultData settingsDefaultData = SettingsDefaultData();
 
   SettingsDescriptionLocalDataSource(super.isarInit, this.defaults) {
-    setHelpers(IsarHelper(isar: isarInit.isar, isarColection: isarInit.isar.isarSettingsDescriptions));
+    setHelpers(IsarHelper(isar: isarInit.isar, isarCollection: isarInit.isar.isarSettingsDescriptions));
     addDefaults();
   }
 

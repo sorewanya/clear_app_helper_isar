@@ -16,10 +16,10 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
 
   SettingsLocalDataSource(super.isarInit, this.defaults) {
     setHelpers(
-      IsarHelper(isar: isarInit.isar, isarColection: isarInit.isar.isarSettings),
+      IsarHelper(isar: isarInit.isar, isarCollection: isarInit.isar.isarSettings),
       IsarLogsHelper(
         isar: isarInit.isar,
-        isarColection: isarInit.isar.isarSettingsLogs,
+        isarCollection: isarInit.isar.isarSettingsLogs,
         loggingSettings: SettingsSettingsEnum.loggingEnable,
       ),
     );
