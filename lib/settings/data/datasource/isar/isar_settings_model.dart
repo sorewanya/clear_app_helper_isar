@@ -1,26 +1,26 @@
 import 'package:clear_app_helper/core/hash_func.dart';
-import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-import 'package:clear_app_helper_isar/core/datasources/isar/isar_log.dart';
 import 'package:clear_app_helper/settings/domain/entities/enums_of_settings.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_entity.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_log_action.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_types.dart';
+import 'package:clear_app_helper_isar/core/datasources/isar/isar_log.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:equatable/equatable.dart';
+import 'package:isar_community/isar.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'isar_settings_model.g.dart';
 
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
+// ignore: avoid_implementing_value_types
 class IsarSettings with EquatableMixin implements SettingsEntity {
   @override
   Id get id => fastHash(name);
 
   @override
-  String name;
+  final String name;
   @override
   final String defaultValue;
   @override
@@ -37,8 +37,8 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
   IsarSettings({
     required this.name,
     required this.defaultValue,
-    this.userValue,
     required this.type,
+    this.userValue,
     this.confirmType,
     this.values,
     this.isDeleted = false,
@@ -91,7 +91,7 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
       SettingsTypeEnum.listOfValuesExtend => SettingsListOfValuesExtend.fromEntity(this) ?? this,
       SettingsTypeEnum.savedSearch => SettingsSavedSearch.fromEntity(this) ?? this,
       SettingsTypeEnum.rfwWidget => this,
-      SettingsTypeEnum.doublee => SettingsInt.fromEntity(this) ?? this,
+      SettingsTypeEnum.doublee => SettingsDouble.fromEntity(this) ?? this,
     };
   }
 
@@ -100,11 +100,13 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsToJson(this);
   @override
-  get copyWith => _$IsarSettingsCWProxyImpl(this);
+  @ignore
+  dynamic get copyWith => _$IsarSettingsCWProxyImpl(this);
 }
 
 @Collection(inheritance: false)
 @JsonSerializable()
+// ignore: must_be_immutable
 class IsarSettingsLog with EquatableMixin implements IsarLog {
   @override
   Id? id;
@@ -130,5 +132,6 @@ class IsarSettingsLog with EquatableMixin implements IsarLog {
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsLogToJson(this);
   @override
-  get copyWith => throw UnsupportedError('copyWith not implemented $runtimeType');
+  @ignore
+  dynamic get copyWith => throw UnsupportedError('copyWith not implemented $runtimeType');
 }

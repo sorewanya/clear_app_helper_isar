@@ -6,32 +6,33 @@ import 'package:clear_app_helper_isar/settings/data/datasource/settings_descript
 import 'package:clear_app_helper_isar/settings/data/datasource/settings_local_data_sources.dart';
 
 import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 final getIt = GetIt.instance;
 
 void init() {
-  getIt.registerLazySingleton<IsarI18n>(() => IsarI18nRu());
-  getIt.registerLazySingleton<IsarInit>(
-    () => IsarInit(prefsHelper: getIt(), schemas: getIt(), dbFileName: 'kopotproject'),
-  );
-  getIt.registerLazySingleton<List<CollectionSchema<dynamic>>>(
-    () => [
-      ///add your Schema's, for model IsarTest you mast add:
-      ///`IsarTestSchema`
-    ],
-  );
-  getIt.registerLazySingleton<SettingsRepository>(
-    () => SettingsRepository(localDataSource: getIt<SettingsLocalDataSource>(), networkInfo: getIt()),
-  );
-  getIt.registerLazySingleton<SettingsDescriptionRepository>(
-    () => SettingsDescriptionRepository(
-      localDataSource: getIt<SettingsDescriptionLocalDataSource>(),
-      networkInfo: getIt(),
-    ),
-  );
-  getIt.registerLazySingleton<SettingsLocalDataSource>(() => SettingsLocalDataSource(getIt(), getIt()));
-  getIt.registerLazySingleton<SettingsDescriptionLocalDataSource>(
-    () => SettingsDescriptionLocalDataSource(getIt(), getIt()),
-  );
+  getIt
+    ..registerLazySingleton<IsarI18n>(IsarI18nRu.new)
+    ..registerLazySingleton<IsarInit>(
+      () => IsarInit(prefsHelper: getIt(), schemas: getIt(), dbFileName: 'kopotproject'),
+    )
+    ..registerLazySingleton<List<CollectionSchema<dynamic>>>(
+      () => [
+        ///add your Schema's, for model IsarTest you mast add:
+        ///`IsarTestSchema`
+      ],
+    )
+    ..registerLazySingleton<SettingsRepository>(
+      () => SettingsRepository(localDataSource: getIt<SettingsLocalDataSource>(), networkInfo: getIt()),
+    )
+    ..registerLazySingleton<SettingsDescriptionRepository>(
+      () => SettingsDescriptionRepository(
+        localDataSource: getIt<SettingsDescriptionLocalDataSource>(),
+        networkInfo: getIt(),
+      ),
+    )
+    ..registerLazySingleton<SettingsLocalDataSource>(() => SettingsLocalDataSource(getIt(), getIt()))
+    ..registerLazySingleton<SettingsDescriptionLocalDataSource>(
+      () => SettingsDescriptionLocalDataSource(getIt(), getIt()),
+    );
 }

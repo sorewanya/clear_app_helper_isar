@@ -1,6 +1,6 @@
 import 'package:clear_app_helper/core/domain/entities/settings_enum.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_setting_and_stream.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 class IsarSettingsHelper {
   final Isar _isar;

@@ -2,10 +2,10 @@ import 'package:clear_app_helper/core/datasources/db_helper.dart';
 import 'package:clear_app_helper/core/domain/entities/app_entity.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_setting_and_stream.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_settings_helper.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 class IsarHelper<T extends AppEntity> extends DBHelper<T> {
-  /// Isar instance. use [IsarInit]
+  /// Isar instance. use [`IsarInit`]
   final Isar isar;
   late final IsarSettingsHelper isarSettingsHelper;
 
@@ -13,36 +13,36 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
   /// ```
   /// isar.isarSettings
   /// ```
-  final IsarCollection<T> isarColection;
+  final IsarCollection<T> isarCollection;
 
-  IsarSettingAndStream? curentLoggingEnable;
-  IsarHelper({required this.isar, required this.isarColection}) {
+  IsarSettingAndStream? currentLoggingEnable;
+  IsarHelper({required this.isar, required this.isarCollection}) {
     isarSettingsHelper = IsarSettingsHelper(isar);
   }
 
   @override
   bool getCaseSensitiveSettings() {
-    return isarSettingsHelper.caseSensitive?.userOrDefaultValue == "true";
+    return isarSettingsHelper.caseSensitive?.userOrDefaultValue == 'true';
   }
 
   @override
   bool getSearchAddParentToChildListSettings() {
-    return isarSettingsHelper.searchAddParentToChildList?.userOrDefaultValue == "true";
+    return isarSettingsHelper.searchAddParentToChildList?.userOrDefaultValue == 'true';
   }
 
   @override
   bool getShowDeletedSettings() {
-    return isarSettingsHelper.showDeleted?.userOrDefaultValue == "true";
+    return isarSettingsHelper.showDeleted?.userOrDefaultValue == 'true';
   }
 
   @override
   Future<T?> getById({required int id}) {
-    return isarColection.get(id);
+    return isarCollection.get(id);
   }
 
   @override
   Future<List<int>> addMany({required List<T> itemList}) async {
-    return await isar.writeTxn(() async => await isarColection.putAll(itemList));
+    return isar.writeTxn(() async => isarCollection.putAll(itemList));
   }
 
   @override
@@ -50,48 +50,48 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
     required List<T> Function() itemList,
     int? idToEmptyCheck,
     Function()? doIfAddDefaultsInsideTxn,
-  }) {
-    if (isarColection.countSync() == 0) {
-      return isar.writeTxn(() {
-        var r = isarColection.putAll(itemList());
+  }) async {
+    if (isarCollection.countSync() == 0) {
+      return isar.writeTxn(() async {
+        final r = await isarCollection.putAll(itemList());
         if (doIfAddDefaultsInsideTxn != null) doIfAddDefaultsInsideTxn();
         return r;
       });
     }
-    return null;
+    return [];
   }
 
   @override
   Future<int> update({required T item}) async {
-    return await isar.writeTxn(() async => await isarColection.put(item));
+    return isar.writeTxn(() async => isarCollection.put(item));
   }
 
-  ///directly delete, not set [isDeleted]!
+  ///directly delete, not set [`isDeleted`]!
   @override
   Future<bool> delete(int id) async {
-    return await isar.writeTxn(() async => await isarColection.delete(id));
+    return isar.writeTxn(() async => isarCollection.delete(id));
   }
 
-  ///directly delete, not set [isDeleted]!
+  ///directly delete, not set [`isDeleted`]!
   @override
   Future<int> deleteMany(List<int> ids) async {
-    return await isar.writeTxn(() async => await isarColection.deleteAll(ids));
+    return isar.writeTxn(() async => isarCollection.deleteAll(ids));
   }
 
-  ///directly delete, not set [isDeleted]!
+  ///directly delete, not set [`isDeleted`]!
   @override
   Future<void> deleteAll() async {
-    return await isar.writeTxn(() async => await isarColection.clear());
+    return isar.writeTxn(() async => isarCollection.clear());
   }
 
   @override
   Future<int> add({required T item}) async {
-    return await isar.writeTxn(() async => await isarColection.put(item));
+    return isar.writeTxn(() async => isarCollection.put(item));
   }
 
   @override
-  Stream<T?> watchObject(id) {
-    return isarColection.watchObject(id);
+  Stream<T?> watchObject(int id) {
+    return isarCollection.watchObject(id);
   }
 
   @override
@@ -99,18 +99,18 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
     if (id == null) {
       return const Stream.empty();
     }
-    return isarColection.watchObjectLazy(id);
+    return isarCollection.watchObjectLazy(id);
   }
 
   @override
   Stream<void> watchLazy() {
-    return isarColection.watchLazy();
+    return isarCollection.watchLazy();
   }
 
-  static Future<CurentT?> getFromColectionById<CurentT>({
-    required IsarCollection<CurentT> isarColection,
+  static Future<CurrentT?> getFromCollectionById<CurrentT>({
+    required IsarCollection<CurrentT> isarCollection,
     required int id,
   }) async {
-    return await isarColection.get(id);
+    return isarCollection.get(id);
   }
 }

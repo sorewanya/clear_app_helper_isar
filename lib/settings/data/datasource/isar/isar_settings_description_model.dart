@@ -1,15 +1,15 @@
+import 'package:clear_app_helper/settings/domain/entities/settings_description_entity.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'package:clear_app_helper/settings/domain/entities/settings_description_entity.dart';
 
 part 'isar_settings_description_model.g.dart';
 
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
+// ignore: avoid_implementing_value_types
 class IsarSettingsDescription with EquatableMixin implements SettingsDescriptionEntity {
   @override
   final Id id;
@@ -38,5 +38,6 @@ class IsarSettingsDescription with EquatableMixin implements SettingsDescription
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsDescriptionToJson(this);
   @override
-  get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
+  @ignore
+  dynamic get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
 }

@@ -1,17 +1,17 @@
 import 'package:clear_app_helper/core/hash_func.dart';
 import 'package:clear_app_helper/settings/domain/entities/settings_entity.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_model.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 class IsarSettingAndStream {
   final String name;
 
-  ///Isar instance. use [IsarInit]
+  ///Isar instance. use [`IsarInit`]
   final Isar isar;
 
   Stream<SettingsEntity?>? _stream;
 
-  /// curent setting from [name]
+  /// current setting from [name]
   SettingsEntity? setting;
 
   ///[name] - setting name
@@ -25,7 +25,7 @@ class IsarSettingAndStream {
     _stream?.listen((event) => setting = event);
   }
 
-  String get userOrDefaultValue => setting?.getUserOrDefaultValueAsString ?? "";
+  String get userOrDefaultValue => setting?.getUserOrDefaultValueAsString ?? '';
   String? get userOrDefaultValueOrNull => setting?.getUserOrDefaultValueAsString;
   bool? get userOrDefaultValueAsBool => SettingsBool.fromEntity(setting)?.getUserOrDefaultValueAsBool;
 }

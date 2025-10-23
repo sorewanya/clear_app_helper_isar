@@ -1,3 +1,10 @@
+// ignore_for_file: unreachable_from_main, depend_on_referenced_packages, dangling_library_doc_comments, flutter_style_todos
+
+///
+/// WARNING!
+///
+/// TODO Remove ignore_for_file lines^
+///
 import 'dart:io';
 
 import 'package:clear_app_helper/core/presentation/widgets/loading_indicator.dart';
@@ -38,7 +45,7 @@ void main(List<String> args) async {
   }
 
   await waitPrefs();
-  initializeDateFormatting('en', null).then((_) => runApp(const MyApp())); //TODO replace en with your language
+  await initializeDateFormatting('en').then((_) => runApp(const MyApp())); //TODO replace en with your language
 }
 
 class MyApp extends StatefulWidget {
@@ -55,12 +62,12 @@ class _MyAppState extends State<MyApp> {
     Future<Widget> checkDB() async {
       isarDBdirectory = prefsHelper.prefs.getString('isarDBdirectory');
       if (isarDBdirectory == null) {
-        Directory dir = await getApplicationDocumentsDirectory();
+        final Directory dir = await getApplicationDocumentsDirectory();
         return IsarDbChoicePage(
           isarDBdirectory: '${dir.path}/.isarDB',
           sharedPreferencesHelper: prefsHelper,
           setDirectory: () => setState(() {
-            isarDBdirectory = "_";
+            isarDBdirectory = '_';
           }),
         );
       }
@@ -79,12 +86,15 @@ class _MyAppState extends State<MyApp> {
       // return MultiBlocProvider(
       //   providers: getBlocProviders(),
       //   child: DeviceCheck(
+      //     ///
+      //     ///SEE MyThemeData info for add package:sizer and make all in app more flexible
+      //     ///
       //     child: GetMaterialApp(
       //       debugShowCheckedModeBanner: false,
       //       title: '====APP NAME====',
-      //       themeMode: ThemeMode.system,
-      //       theme: getThemeDataLight(),
-      //       darkTheme: getThemeDataDark(),
+      //       themeMode: GetIt.instance<MyThemeData>().mode,
+      //       theme: GetIt.instance<MyThemeData>().light,
+      //       darkTheme: GetIt.instance<MyThemeData>().dark,
       //       home: BaseWidget(),
       //       getPages: [
       //         GetPage(name: '/', page: () => const BaseWidget()),
@@ -111,7 +121,7 @@ class _MyAppState extends State<MyApp> {
     return FutureBuilder(
       future: checkDB(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData && snapshot.data == null) return loadingIndicator("isar db check");
+        if (!snapshot.hasData && snapshot.data == null) return loadingIndicator('isar db check');
         return snapshot.data!;
       },
     );
