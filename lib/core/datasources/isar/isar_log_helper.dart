@@ -15,6 +15,45 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
   IsarSettingAndStream? globalLoggingSizeLimitCount;
 
   @override
+  Future<int> addLog({required AppEntity item, required int id}) async {
+    if (!isLoggingEnabled()) return 0;
+    final (type, count) = loggingSizeLimited();
+    if (type == null) return 0;
+    if (count != null && count != 0) {
+      await checkAndRemoveByCount(count, type == 1, id);
+    }
+    return super.add(item: item);
+  }
+
+  ///  filtredById = isarInit.isar.isarTaskLogs.filter().itemIdEqualTo(id).sortByTimestamp()
+  ///  T = IsarTaskLog
+  @override
+  Future<void> checkAndRemoveByCount(int count, bool byItem, int id) async {
+    if (T is! IsarLog) return;
+    final isarCount = byItem
+        // ignore: avoid_dynamic_calls
+        ? (isarCollection as dynamic).filter().itemIdEqualTo(id).countSync() as int? ?? 0
+        : isarCollection.countSync();
+    if (count < isarCount) {
+      byItem
+          ? await isar.writeTxn(
+              // ignore: avoid_dynamic_calls
+              () async => await (isarCollection as dynamic)
+                  .filter()
+                  .itemIdEqualTo(id)
+                  .sortByTimestamp()
+                  .limit(isarCount - count)
+                  .deleteAll(),
+            )
+          : await isar.writeTxn(
+              () async =>
+                  // ignore: avoid_dynamic_calls
+                  await (isarCollection as dynamic).where().sortByTimestamp().limit(isarCount - count).deleteAll(),
+            );
+    }
+  }
+
+  @override
   bool isLoggingEnabled() {
     ///Check logging enable in settings
     if (loggingSettings != null) {
@@ -50,44 +89,5 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
         SettingsInt.fromEntity(globalLoggingSizeLimitCount?.setting)?.getUserOrDefaultValueAsIntOrNull,
       );
     }
-  }
-
-  ///  filtredById = isarInit.isar.isarTaskLogs.filter().itemIdEqualTo(id).sortByTimestamp()
-  ///  T = IsarTaskLog
-  @override
-  Future<void> checkAndRemoveByCount(int count, bool byItem, int id) async {
-    if (T is! IsarLog) return;
-    final isarCount = byItem
-        // ignore: avoid_dynamic_calls
-        ? (isarCollection as dynamic).filter().itemIdEqualTo(id).countSync() as int? ?? 0
-        : isarCollection.countSync();
-    if (count < isarCount) {
-      byItem
-          ? await isar.writeTxn(
-              // ignore: avoid_dynamic_calls
-              () async => await (isarCollection as dynamic)
-                  .filter()
-                  .itemIdEqualTo(id)
-                  .sortByTimestamp()
-                  .limit(isarCount - count)
-                  .deleteAll(),
-            )
-          : await isar.writeTxn(
-              () async =>
-                  // ignore: avoid_dynamic_calls
-                  await (isarCollection as dynamic).where().sortByTimestamp().limit(isarCount - count).deleteAll(),
-            );
-    }
-  }
-
-  @override
-  Future<int> addLog({required AppEntity item, required int id}) async {
-    if (!isLoggingEnabled()) return 0;
-    final (type, count) = loggingSizeLimited();
-    if (type == null) return 0;
-    if (count != null && count != 0) {
-      await checkAndRemoveByCount(count, type == 1, id);
-    }
-    return super.add(item: item);
   }
 }

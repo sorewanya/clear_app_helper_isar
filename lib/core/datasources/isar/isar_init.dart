@@ -8,35 +8,6 @@ import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IsarInit {
-  static IsarInit? _instance;
-  late final Isar _isar;
-  bool _inited = false;
-  final SharedPreferencesHelper _prefsHelper;
-  final List<CollectionSchema<dynamic>> _schemas;
-  final String _dbFileName;
-  final bool _inspector;
-  final int _maxSizeMiB;
-  final bool _relaxedDurability;
-  final CompactCondition? _compactOnLaunch;
-
-  IsarInit._internal({
-    required SharedPreferencesHelper prefsHelper,
-    required List<CollectionSchema<dynamic>> schemas,
-    required String dbFileName,
-    required bool inspector,
-    required int maxSizeMiB,
-    required bool relaxedDurability,
-    required CompactCondition? compactOnLaunch,
-  }) : _prefsHelper = prefsHelper,
-       _schemas = schemas,
-       _dbFileName = dbFileName,
-       _inspector = inspector,
-       _maxSizeMiB = maxSizeMiB,
-       _relaxedDurability = relaxedDurability,
-       _compactOnLaunch = compactOnLaunch {
-    _instance = this;
-  }
-
   factory IsarInit({
     required SharedPreferencesHelper prefsHelper,
     required List<CollectionSchema<dynamic>> schemas,
@@ -56,6 +27,44 @@ class IsarInit {
         maxSizeMiB: maxSizeMiB,
         relaxedDurability: relaxedDurability,
       );
+  IsarInit._internal({
+    required SharedPreferencesHelper prefsHelper,
+    required List<CollectionSchema<dynamic>> schemas,
+    required String dbFileName,
+    required bool inspector,
+    required int maxSizeMiB,
+    required bool relaxedDurability,
+    required CompactCondition? compactOnLaunch,
+  }) : _prefsHelper = prefsHelper,
+       _schemas = schemas,
+       _dbFileName = dbFileName,
+       _inspector = inspector,
+       _maxSizeMiB = maxSizeMiB,
+       _relaxedDurability = relaxedDurability,
+       _compactOnLaunch = compactOnLaunch {
+    _instance = this;
+  }
+  static IsarInit? _instance;
+  late final Isar _isar;
+  bool _inited = false;
+  final SharedPreferencesHelper _prefsHelper;
+  final List<CollectionSchema<dynamic>> _schemas;
+  final String _dbFileName;
+  final bool _inspector;
+  final int _maxSizeMiB;
+
+  final bool _relaxedDurability;
+
+  final CompactCondition? _compactOnLaunch;
+
+  bool get inited => _inited;
+
+  Isar get isar {
+    if (!_inited) {
+      throw StateError('Isar database has not been initialized. Call initialize() first.');
+    }
+    return _isar;
+  }
 
   Future<void> initialize() async {
     if (_inited) return;
@@ -97,13 +106,4 @@ class IsarInit {
     IsarSettingsHelper(_isar); // Initialize settings helper with the opened Isar instance
     _inited = true; // Set true only after Isar is fully open
   }
-
-  Isar get isar {
-    if (!_inited) {
-      throw StateError('Isar database has not been initialized. Call initialize() first.');
-    }
-    return _isar;
-  }
-
-  bool get inited => _inited;
 }

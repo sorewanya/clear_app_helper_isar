@@ -5,8 +5,13 @@ import 'package:clear_app_helper_isar/core/datasources/isar/isar_settings_helper
 import 'package:isar_community/isar.dart';
 
 class IsarHelper<T extends AppEntity> extends DBHelper<T> {
+  IsarHelper({required this.isar, required this.isarCollection}) {
+    isarSettingsHelper = IsarSettingsHelper(isar);
+  }
+
   /// Isar instance. use [`IsarInit`]
   final Isar isar;
+
   late final IsarSettingsHelper isarSettingsHelper;
 
   /// isar schemas, like
@@ -14,30 +19,11 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
   /// isar.isarSettings
   /// ```
   final IsarCollection<T> isarCollection;
-
   IsarSettingAndStream? currentLoggingEnable;
-  IsarHelper({required this.isar, required this.isarCollection}) {
-    isarSettingsHelper = IsarSettingsHelper(isar);
-  }
 
   @override
-  bool getCaseSensitiveSettings() {
-    return isarSettingsHelper.caseSensitive?.userOrDefaultValue == 'true';
-  }
-
-  @override
-  bool getSearchAddParentToChildListSettings() {
-    return isarSettingsHelper.searchAddParentToChildList?.userOrDefaultValue == 'true';
-  }
-
-  @override
-  bool getShowDeletedSettings() {
-    return isarSettingsHelper.showDeleted?.userOrDefaultValue == 'true';
-  }
-
-  @override
-  Future<T?> getById({required int id}) {
-    return isarCollection.get(id);
+  Future<int> add({required T item}) async {
+    return isar.writeTxn(() async => isarCollection.put(item));
   }
 
   @override
@@ -61,11 +47,6 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
     return [];
   }
 
-  @override
-  Future<int> update({required T item}) async {
-    return isar.writeTxn(() async => isarCollection.put(item));
-  }
-
   ///directly delete, not set [`isDeleted`]!
   @override
   Future<bool> delete(int id) async {
@@ -74,19 +55,44 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
 
   ///directly delete, not set [`isDeleted`]!
   @override
-  Future<int> deleteMany(List<int> ids) async {
-    return isar.writeTxn(() async => isarCollection.deleteAll(ids));
-  }
-
-  ///directly delete, not set [`isDeleted`]!
-  @override
   Future<void> deleteAll() async {
     return isar.writeTxn(() async => isarCollection.clear());
   }
 
+  ///directly delete, not set [`isDeleted`]!
   @override
-  Future<int> add({required T item}) async {
+  Future<int> deleteMany(List<int> ids) async {
+    return isar.writeTxn(() async => isarCollection.deleteAll(ids));
+  }
+
+  @override
+  Future<T?> getById({required int id}) {
+    return isarCollection.get(id);
+  }
+
+  @override
+  bool getCaseSensitiveSettings() {
+    return isarSettingsHelper.caseSensitive?.userOrDefaultValue == 'true';
+  }
+
+  @override
+  bool getSearchAddParentToChildListSettings() {
+    return isarSettingsHelper.searchAddParentToChildList?.userOrDefaultValue == 'true';
+  }
+
+  @override
+  bool getShowDeletedSettings() {
+    return isarSettingsHelper.showDeleted?.userOrDefaultValue == 'true';
+  }
+
+  @override
+  Future<int> update({required T item}) async {
     return isar.writeTxn(() async => isarCollection.put(item));
+  }
+
+  @override
+  Stream<void> watchLazy() {
+    return isarCollection.watchLazy();
   }
 
   @override
@@ -100,11 +106,6 @@ class IsarHelper<T extends AppEntity> extends DBHelper<T> {
       return const Stream.empty();
     }
     return isarCollection.watchObjectLazy(id);
-  }
-
-  @override
-  Stream<void> watchLazy() {
-    return isarCollection.watchLazy();
   }
 
   static Future<CurrentT?> getFromCollectionById<CurrentT>({

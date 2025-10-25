@@ -7,26 +7,26 @@ import 'package:clear_app_helper_isar/core/datasources/isar/isar_init.dart';
 // ignore: avoid_types_as_parameter_names
 abstract class IsarLocalDataSource<Type extends AppEntity, SEType extends SearchEntity>
     extends LocalDataSource<Type, SEType> {
-  final IsarInit isarInit;
-
   IsarLocalDataSource(this.isarInit);
-  @override
-  void setHelpers(DBHelper<Type> dbHelper, [DBLogsHelper? dbLogsHelper]) {
-    this.dbHelper = dbHelper;
-    this.dbLogsHelper = dbLogsHelper;
-  }
 
+  final IsarInit isarInit;
+  @override
+  Future<int> add(Type item);
+
+  @override
+  Future<List<int>> addMany(List<Type> itemList);
+  @override
+  Future<int> countOfFinded(SEType searchEntity);
+
+  @override
+  Future<List<Type>> getAll(SEType searchEntity);
   @override
   Future<List<int>> getAllIds(SEType searchEntity);
+
   @override
   Future<Type?> getById(int id) async {
     return dbHelper.getById(id: id);
   }
-
-  @override
-  Future<int> countOfFinded(SEType searchEntity);
-  @override
-  Future<List<Type>> getAll(SEType searchEntity);
 
   @override
   Stream<Type?> getStream(int id) {
@@ -34,19 +34,20 @@ abstract class IsarLocalDataSource<Type extends AppEntity, SEType extends Search
   }
 
   @override
-  Stream<void> watchObjectLazy(int? id) {
-    return dbHelper.watchObjectLazy(id);
+  void setHelpers(DBHelper<Type> dbHelper, [DBLogsHelper? dbLogsHelper]) {
+    this.dbHelper = dbHelper;
+    this.dbLogsHelper = dbLogsHelper;
   }
 
+  @override
+  Future<int> update(Type item);
   @override
   Stream<void> watchLazy() {
     return dbHelper.watchLazy();
   }
 
   @override
-  Future<int> update(Type item);
-  @override
-  Future<int> add(Type item);
-  @override
-  Future<List<int>> addMany(List<Type> itemList);
+  Stream<void> watchObjectLazy(int? id) {
+    return dbHelper.watchObjectLazy(id);
+  }
 }

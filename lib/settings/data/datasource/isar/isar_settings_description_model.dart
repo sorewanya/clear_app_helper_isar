@@ -11,33 +11,33 @@ part 'isar_settings_description_model.g.dart';
 @Collection(inheritance: false)
 // ignore: avoid_implementing_value_types
 class IsarSettingsDescription with EquatableMixin implements SettingsDescriptionEntity {
-  @override
-  final Id id;
-
-  @override
-  final String description;
-
   IsarSettingsDescription({required this.id, required this.description});
 
   IsarSettingsDescription.fromEntity({required SettingsDescriptionEntity entity})
     : id = entity.id ?? 1,
       description = entity.description;
 
-  static List<IsarSettingsDescription> fromEntityList(List<SettingsDescriptionEntity> modelList) {
-    return modelList.map((e) => IsarSettingsDescription.fromEntity(entity: e)).toList();
-  }
+  ///JSON
+  factory IsarSettingsDescription.fromJson(Map<String, dynamic> json) => _$IsarSettingsDescriptionFromJson(json);
+
+  @override
+  final Id id;
+
+  @override
+  final String description;
+
+  @override
+  @ignore
+  dynamic get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
+  //END Equatable
 
   //Equatable
   @override
   @ignore
   List<Object?> get props => [description];
-  //END Equatable
-
-  ///JSON
-  factory IsarSettingsDescription.fromJson(Map<String, dynamic> json) => _$IsarSettingsDescriptionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsDescriptionToJson(this);
-  @override
-  @ignore
-  dynamic get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
+  static List<IsarSettingsDescription> fromEntityList(List<SettingsDescriptionEntity> modelList) {
+    return modelList.map((e) => IsarSettingsDescription.fromEntity(entity: e)).toList();
+  }
 }

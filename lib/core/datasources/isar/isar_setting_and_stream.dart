@@ -4,16 +4,6 @@ import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_setting
 import 'package:isar_community/isar.dart';
 
 class IsarSettingAndStream {
-  final String name;
-
-  ///Isar instance. use [`IsarInit`]
-  final Isar isar;
-
-  Stream<SettingsEntity?>? _stream;
-
-  /// current setting from [name]
-  SettingsEntity? setting;
-
   ///[name] - setting name
   ///
   ///[isar] - Isar instance
@@ -25,7 +15,17 @@ class IsarSettingAndStream {
     _stream?.listen((event) => setting = event);
   }
 
+  final String name;
+
+  ///Isar instance. use [`IsarInit`]
+  final Isar isar;
+
+  Stream<SettingsEntity?>? _stream;
+
+  /// current setting from [name]
+  SettingsEntity? setting;
+
   String get userOrDefaultValue => setting?.getUserOrDefaultValueAsString ?? '';
-  String? get userOrDefaultValueOrNull => setting?.getUserOrDefaultValueAsString;
   bool? get userOrDefaultValueAsBool => SettingsBool.fromEntity(setting)?.getUserOrDefaultValueAsBool;
+  String? get userOrDefaultValueOrNull => setting?.getUserOrDefaultValueAsString;
 }
