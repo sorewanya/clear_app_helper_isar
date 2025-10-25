@@ -1,0 +1,6 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.sortMembers": "explicit"
+    },
+    "dart.lineLength": 120
+}
