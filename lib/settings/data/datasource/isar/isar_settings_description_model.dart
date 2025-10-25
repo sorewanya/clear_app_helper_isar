@@ -9,7 +9,6 @@ part 'isar_settings_description_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
-// ignore: avoid_implementing_value_types
 class IsarSettingsDescription with EquatableMixin implements SettingsDescriptionEntity {
   IsarSettingsDescription({required this.id, required this.description});
 
@@ -26,12 +25,6 @@ class IsarSettingsDescription with EquatableMixin implements SettingsDescription
   @override
   final String description;
 
-  @override
-  @ignore
-  dynamic get copyWith => _$IsarSettingsDescriptionCWProxyImpl(this);
-  //END Equatable
-
-  //Equatable
   @override
   @ignore
   List<Object?> get props => [description];

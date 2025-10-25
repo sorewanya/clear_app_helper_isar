@@ -14,7 +14,6 @@ part 'isar_settings_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
-// ignore: avoid_implementing_value_types
 class IsarSettings with EquatableMixin implements SettingsEntity {
   IsarSettings({
     required this.name,
@@ -61,16 +60,10 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
   final bool isDeleted;
 
   @override
-  @ignore
-  dynamic get copyWith => _$IsarSettingsCWProxyImpl(this);
-
-  //END Equatable
-
-  @override
   String get getUserOrDefaultValueAsString => userValue ?? defaultValue;
   @override
   Id get id => fastHash(name);
-  //Equatable
+
   @override
   @ignore
   List<Object?> get props => [name, defaultValue, userValue, type, confirmType, values, isDeleted];
@@ -108,10 +101,7 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
 
 @Collection(inheritance: false)
 @JsonSerializable()
-// ignore: must_be_immutable
 class IsarSettingsLog with EquatableMixin implements IsarLog {
-  //END Equatable
-
   IsarSettingsLog({required this.itemId, required this.logAction, this.settedValue})
     : id = Isar.autoIncrement,
       timestamp = DateTime.now();
@@ -128,10 +118,6 @@ class IsarSettingsLog with EquatableMixin implements IsarLog {
   @enumerated
   final SettingsLogAction logAction;
 
-  @override
-  @ignore
-  dynamic get copyWith => throw UnsupportedError('copyWith not implemented $runtimeType');
-  //Equatable
   @override
   @ignore
   List<Object?> get props => [id, timestamp, itemId, settedValue, logAction];

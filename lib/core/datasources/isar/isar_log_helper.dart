@@ -25,7 +25,7 @@ class IsarLogsHelper<T extends IsarLog> extends IsarHelper with DBLogsHelper {
     return super.add(item: item);
   }
 
-  ///  filtredById = isarInit.isar.isarTaskLogs.filter().itemIdEqualTo(id).sortByTimestamp()
+  ///  filteredById = isarInit.isar.isarTaskLogs.filter().itemIdEqualTo(id).sortByTimestamp()
   ///  T = IsarTaskLog
   @override
   Future<void> checkAndRemoveByCount(int count, bool byItem, int id) async {
