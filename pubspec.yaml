@@ -1,12 +1,11 @@
 name: clear_app_helper_isar
 description: "Isar DB support of clear_app_helper"
-version: 0.1.1
-homepage: null
+version: 0.1.2
+# homepage: null
 publish_to: none
 
-
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.10.0
   flutter: ">=1.17.0"
 
 dependencies:
@@ -16,14 +15,14 @@ dependencies:
     #   url: https://github.com/sorewanya/clear_app_helper.git
     #   ref: main
   copy_with_extension:
-  equatable: 
+  equatable:
   file_picker: ^10.2.0
   flutter:
     sdk: flutter
   get_it: ^8.0.3
   isar_community: ^3.3.0-dev.1
   isar_community_flutter_libs: ^3.3.0-dev.1
-  json_annotation: 
+  json_annotation:
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
 
@@ -32,11 +31,9 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  isar_community_generator: 
+  isar_community_generator:
     git:
       url: https://github.com/callumw-k/isar-community
       ref: migrating-to-source_gen-3
       path: packages/isar_community_generator
-  json_serializable: 
-
-flutter:
+  json_serializable:
