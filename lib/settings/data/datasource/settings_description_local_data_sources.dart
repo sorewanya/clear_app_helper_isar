@@ -10,12 +10,17 @@ import 'package:isar_community/isar.dart';
 
 class SettingsDescriptionLocalDataSource
     extends IsarLocalDataSource<SettingsDescriptionEntity, SettingsDescriptionSearchEntity> {
-  AbstractDefaultData defaults;
-  final SettingsDefaultData settingsDefaultData = SettingsDefaultData();
-
   SettingsDescriptionLocalDataSource(super.isarInit, this.defaults) {
     setHelpers(IsarHelper(isar: isarInit.isar, isarCollection: isarInit.isar.isarSettingsDescriptions));
     addDefaults();
+  }
+  AbstractDefaultData defaults;
+
+  final SettingsDefaultData settingsDefaultData = SettingsDefaultData();
+
+  @override
+  Future<int> add(SettingsDescriptionEntity item) async {
+    return dbHelper.add(item: IsarSettingsDescription.fromEntity(entity: item));
   }
 
   void addDefaults() {
@@ -36,21 +41,17 @@ class SettingsDescriptionLocalDataSource
     );
   }
 
-  QueryBuilder<IsarSettingsDescription, IsarSettingsDescription, QAfterFilterCondition> _filtr(
-    SettingsDescriptionSearchEntity searchEntity,
-  ) {
-    //caseSensitive
-    bool caseSensitive = false;
-    if (searchEntity.description != null) {
-      caseSensitive = dbHelper.getCaseSensitiveSettings();
-    }
-    return isarInit.isar.isarSettingsDescriptions
-        .filter()
-        .optional(searchEntity.id != null, (q) => q.idEqualTo(searchEntity.id!))
-        .optional(
-          searchEntity.description != null,
-          (q) => q.descriptionContains(searchEntity.description!, caseSensitive: caseSensitive),
-        );
+  @override
+  Future<List<int>> addMany(List<SettingsDescriptionEntity> itemList) async {
+    return dbHelper.addMany(itemList: IsarSettingsDescription.fromEntityList(itemList));
+  }
+
+  @override
+  Future<int> countOfFinded(SettingsDescriptionSearchEntity searchEntity) async {
+    final result = _filtr(searchEntity);
+    return isarInit.isar.txn(() async {
+      return result.count();
+    });
   }
 
   @override
@@ -70,24 +71,6 @@ class SettingsDescriptionLocalDataSource
   }
 
   @override
-  Future<int> countOfFinded(SettingsDescriptionSearchEntity searchEntity) async {
-    final result = _filtr(searchEntity);
-    return isarInit.isar.txn(() async {
-      return result.count();
-    });
-  }
-
-  @override
-  Future<List<int>> addMany(List<SettingsDescriptionEntity> itemList) async {
-    return dbHelper.addMany(itemList: IsarSettingsDescription.fromEntityList(itemList));
-  }
-
-  @override
-  Future<int> add(SettingsDescriptionEntity item) async {
-    return dbHelper.add(item: IsarSettingsDescription.fromEntity(entity: item));
-  }
-
-  @override
   Future<int> update(SettingsDescriptionEntity item) async {
     final itemId = await dbHelper.update(item: IsarSettingsDescription.fromEntity(entity: item));
     return itemId;
@@ -97,5 +80,22 @@ class SettingsDescriptionLocalDataSource
   Stream<List<SettingsDescriptionEntity>?> watch(SettingsDescriptionSearchEntity searchEntity) {
     final result = _filtr(searchEntity);
     return result.watch(fireImmediately: true);
+  }
+
+  QueryBuilder<IsarSettingsDescription, IsarSettingsDescription, QAfterFilterCondition> _filtr(
+    SettingsDescriptionSearchEntity searchEntity,
+  ) {
+    //caseSensitive
+    bool caseSensitive = false;
+    if (searchEntity.description != null) {
+      caseSensitive = dbHelper.getCaseSensitiveSettings();
+    }
+    return isarInit.isar.isarSettingsDescriptions
+        .filter()
+        .optional(searchEntity.id != null, (q) => q.idEqualTo(searchEntity.id!))
+        .optional(
+          searchEntity.description != null,
+          (q) => q.descriptionContains(searchEntity.description!, caseSensitive: caseSensitive),
+        );
   }
 }

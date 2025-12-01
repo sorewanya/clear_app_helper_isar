@@ -1,0 +1,12 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.sortMembers": "explicit",
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit",
+        "quickfix.add.required": "explicit",
+        "quickfix.add.required.multi": "explicit",
+        "quickfix.create.constructorForFinalFields": "explicit"
+    },
+    "dart.lineLength": 120,
+    "cSpell.language": "en",
+}

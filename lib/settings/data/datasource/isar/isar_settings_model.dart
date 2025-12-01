@@ -14,26 +14,7 @@ part 'isar_settings_model.g.dart';
 @CopyWith()
 @JsonSerializable()
 @Collection(inheritance: false)
-// ignore: avoid_implementing_value_types
 class IsarSettings with EquatableMixin implements SettingsEntity {
-  @override
-  Id get id => fastHash(name);
-
-  @override
-  final String name;
-  @override
-  final String defaultValue;
-  @override
-  final String? userValue;
-  @override
-  final int type; // use SettingsTypeEnum
-  @override
-  final int? confirmType;
-  @override
-  final List<String>? values;
-  @override
-  final bool isDeleted;
-
   IsarSettings({
     required this.name,
     required this.defaultValue,
@@ -44,12 +25,6 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
     this.isDeleted = false,
   });
 
-  IsarSettings.fromEnum({required EnumsOfSettings e, required this.defaultValue, this.values, this.confirmType})
-    : name = e.name,
-      userValue = null,
-      type = e.typeIndex,
-      isDeleted = false;
-
   IsarSettings.fromEntity({required SettingsEntity entity})
     : name = entity.name,
       defaultValue = entity.defaultValue,
@@ -58,22 +33,46 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
       confirmType = entity.confirmType,
       values = entity.values,
       isDeleted = entity.isDeleted;
+  IsarSettings.fromEnum({required EnumsOfSettings e, required this.defaultValue, this.values, this.confirmType})
+    : name = e.name,
+      userValue = null,
+      type = e.typeIndex,
+      isDeleted = false;
 
-  static List<IsarSettings> fromEntityList(List<SettingsEntity> modelList) {
-    return modelList.map((e) => IsarSettings.fromEntity(entity: e)).toList();
-  }
-
-  //Equatable
+  ///JSON
+  factory IsarSettings.fromJson(Map<String, dynamic> json) => _$IsarSettingsFromJson(json);
   @override
-  @ignore
-  List<Object?> get props => [name, defaultValue, userValue, type, confirmType, values, isDeleted];
-  //END Equatable
+  final String name;
+  @override
+  final String defaultValue;
+  @override
+  final String? userValue;
+  @override
+  final int type; // use SettingsTypeEnum
+
+  @override
+  final int? confirmType;
+
+  @override
+  final List<String>? values;
+
+  @override
+  final bool isDeleted;
 
   @override
   String get getUserOrDefaultValueAsString => userValue ?? defaultValue;
   @override
+  Id get id => fastHash(name);
+
+  @override
+  @ignore
+  List<Object?> get props => [name, defaultValue, userValue, type, confirmType, values, isDeleted];
+
+  @override
   SettingsEntity getSettingsWithNextVariant() => this;
 
+  @override
+  Map<String, dynamic> toJson() => _$IsarSettingsToJson(this);
   @override
   SettingsEntity toType() {
     return switch (SettingsTypeEnum.values[type]) {
@@ -95,19 +94,20 @@ class IsarSettings with EquatableMixin implements SettingsEntity {
     };
   }
 
-  ///JSON
-  factory IsarSettings.fromJson(Map<String, dynamic> json) => _$IsarSettingsFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$IsarSettingsToJson(this);
-  @override
-  @ignore
-  dynamic get copyWith => _$IsarSettingsCWProxyImpl(this);
+  static List<IsarSettings> fromEntityList(List<SettingsEntity> modelList) {
+    return modelList.map((e) => IsarSettings.fromEntity(entity: e)).toList();
+  }
 }
 
 @Collection(inheritance: false)
 @JsonSerializable()
-// ignore: must_be_immutable
 class IsarSettingsLog with EquatableMixin implements IsarLog {
+  IsarSettingsLog({required this.itemId, required this.logAction, this.settedValue})
+    : id = Isar.autoIncrement,
+      timestamp = DateTime.now();
+
+  ///JSON
+  factory IsarSettingsLog.fromJson(Map<String, dynamic> json) => _$IsarSettingsLogFromJson(json);
   @override
   Id? id;
   @override
@@ -117,21 +117,10 @@ class IsarSettingsLog with EquatableMixin implements IsarLog {
   final String? settedValue;
   @enumerated
   final SettingsLogAction logAction;
-  //Equatable
+
   @override
   @ignore
   List<Object?> get props => [id, timestamp, itemId, settedValue, logAction];
-  //END Equatable
-
-  IsarSettingsLog({required this.itemId, required this.logAction, this.settedValue})
-    : id = Isar.autoIncrement,
-      timestamp = DateTime.now();
-
-  ///JSON
-  factory IsarSettingsLog.fromJson(Map<String, dynamic> json) => _$IsarSettingsLogFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$IsarSettingsLogToJson(this);
-  @override
-  @ignore
-  dynamic get copyWith => throw UnsupportedError('copyWith not implemented $runtimeType');
 }

@@ -26,12 +26,6 @@ class IsarDbChoicePage extends StatefulWidget {
 class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
   String isarDBdirectory = '';
   SharedPreferencesHelper? prefsHelper;
-  @override
-  void initState() {
-    prefsHelper = widget.sharedPreferencesHelper;
-    isarDBdirectory = widget.isarDBdirectory;
-    super.initState();
-  }
 
   ///FIXME добавь проверку папки на возможность записи!
 
@@ -81,5 +75,12 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    prefsHelper = widget.sharedPreferencesHelper;
+    isarDBdirectory = widget.isarDBdirectory;
+    super.initState();
   }
 }

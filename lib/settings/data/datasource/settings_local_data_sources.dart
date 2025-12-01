@@ -11,9 +11,6 @@ import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_setting
 import 'package:isar_community/isar.dart';
 
 class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, SettingsSearchEntity> {
-  AbstractDefaultData defaults;
-  final SettingsDefaultData settingsDefaultData = SettingsDefaultData();
-
   SettingsLocalDataSource(super.isarInit, this.defaults) {
     setHelpers(
       IsarHelper(isar: isarInit.isar, isarCollection: isarInit.isar.isarSettings),
@@ -24,6 +21,14 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
       ),
     );
     addDefaults();
+  }
+  AbstractDefaultData defaults;
+
+  final SettingsDefaultData settingsDefaultData = SettingsDefaultData();
+
+  @override
+  Future<int> add(SettingsEntity item) async {
+    return dbHelper.add(item: IsarSettings.fromEntity(entity: item));
   }
 
   void addDefaults() {
@@ -37,6 +42,51 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
       },
       idToEmptyCheck: fastHash(CoreSettingsEnum.showDeleted.name),
     );
+  }
+
+  @override
+  Future<List<int>> addMany(List<SettingsEntity> itemList) async {
+    return dbHelper.addMany(itemList: IsarSettings.fromEntityList(itemList));
+  }
+
+  @override
+  Future<int> countOfFinded(SettingsSearchEntity searchEntity) async {
+    final result = _filtr(searchEntity);
+    return isarInit.isar.txn(() async {
+      return result.count();
+    });
+  }
+
+  @override
+  Future<List<IsarSettings>> getAll(SettingsSearchEntity searchEntity) async {
+    final result = _filtr(searchEntity);
+    return isarInit.isar.txn(() async {
+      return result.findAll();
+    });
+  }
+
+  @override
+  Future<List<int>> getAllIds(SettingsSearchEntity searchEntity) async {
+    final result = _filtr(searchEntity);
+    return isarInit.isar.txn(() async {
+      return result.idProperty().findAll();
+    });
+  }
+
+  @override
+  Future<int> update(SettingsEntity item) async {
+    final itemId = await dbHelper.update(item: IsarSettings.fromEntity(entity: item));
+    await dbLogsHelper?.addLog(
+      item: IsarSettingsLog(itemId: itemId, logAction: SettingsLogAction.updateUserValue, settedValue: item.userValue),
+      id: itemId,
+    );
+    return itemId;
+  }
+
+  @override
+  Stream<List<SettingsEntity>?> watch(SettingsSearchEntity searchEntity) {
+    final result = _filtr(searchEntity);
+    return result.watch(fireImmediately: true);
   }
 
   QueryBuilder<IsarSettings, IsarSettings, QAfterFilterCondition> _filtr(SettingsSearchEntity searchEntity) {
@@ -73,55 +123,5 @@ class SettingsLocalDataSource extends IsarLocalDataSource<SettingsEntity, Settin
           (q) => q.isDeletedEqualTo(false),
         )
         .optional(searchEntity.isChanged != null, (q) => q.userValueIsNotNull());
-  }
-
-  @override
-  Future<List<IsarSettings>> getAll(SettingsSearchEntity searchEntity) async {
-    final result = _filtr(searchEntity);
-    return isarInit.isar.txn(() async {
-      return result.findAll();
-    });
-  }
-
-  @override
-  Future<List<int>> getAllIds(SettingsSearchEntity searchEntity) async {
-    final result = _filtr(searchEntity);
-    return isarInit.isar.txn(() async {
-      return result.idProperty().findAll();
-    });
-  }
-
-  @override
-  Future<int> countOfFinded(SettingsSearchEntity searchEntity) async {
-    final result = _filtr(searchEntity);
-    return isarInit.isar.txn(() async {
-      return result.count();
-    });
-  }
-
-  @override
-  Future<List<int>> addMany(List<SettingsEntity> itemList) async {
-    return dbHelper.addMany(itemList: IsarSettings.fromEntityList(itemList));
-  }
-
-  @override
-  Future<int> add(SettingsEntity item) async {
-    return dbHelper.add(item: IsarSettings.fromEntity(entity: item));
-  }
-
-  @override
-  Future<int> update(SettingsEntity item) async {
-    final itemId = await dbHelper.update(item: IsarSettings.fromEntity(entity: item));
-    await dbLogsHelper?.addLog(
-      item: IsarSettingsLog(itemId: itemId, logAction: SettingsLogAction.updateUserValue, settedValue: item.userValue),
-      id: itemId,
-    );
-    return itemId;
-  }
-
-  @override
-  Stream<List<SettingsEntity>?> watch(SettingsSearchEntity searchEntity) {
-    final result = _filtr(searchEntity);
-    return result.watch(fireImmediately: true);
   }
 }

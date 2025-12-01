@@ -4,49 +4,49 @@ import 'package:clear_app_helper/core/domain/entities/app_entity.dart';
 import 'package:clear_app_helper/core/domain/entities/search_entity.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_init.dart';
 
-// ignore: avoid_types_as_parameter_names
-abstract class IsarLocalDataSource<Type extends AppEntity, SEType extends SearchEntity>
-    extends LocalDataSource<Type, SEType> {
-  final IsarInit isarInit;
-
+abstract class IsarLocalDataSource<T extends AppEntity, SEType extends SearchEntity>
+    extends LocalDataSource<T, SEType> {
   IsarLocalDataSource(this.isarInit);
+
+  final IsarInit isarInit;
   @override
-  void setHelpers(DBHelper<Type> dbHelper, [DBLogsHelper? dbLogsHelper]) {
+  Future<int> add(T item);
+
+  @override
+  Future<List<int>> addMany(List<T> itemList);
+  @override
+  Future<int> countOfFinded(SEType searchEntity);
+
+  @override
+  Future<List<T>> getAll(SEType searchEntity);
+  @override
+  Future<List<int>> getAllIds(SEType searchEntity);
+
+  @override
+  Future<T?> getById(int id) async {
+    return dbHelper.getById(id: id);
+  }
+
+  @override
+  Stream<T?> getStream(int id) {
+    return dbHelper.watchObject(id);
+  }
+
+  @override
+  void setHelpers(DBHelper<T> dbHelper, [DBLogsHelper? dbLogsHelper]) {
     this.dbHelper = dbHelper;
     this.dbLogsHelper = dbLogsHelper;
   }
 
   @override
-  Future<List<int>> getAllIds(SEType searchEntity);
-  @override
-  Future<Type?> getById(int id) async {
-    return dbHelper.getById(id: id);
-  }
-
-  @override
-  Future<int> countOfFinded(SEType searchEntity);
-  @override
-  Future<List<Type>> getAll(SEType searchEntity);
-
-  @override
-  Stream<Type?> getStream(int id) {
-    return dbHelper.watchObject(id);
-  }
-
-  @override
-  Stream<void> watchObjectLazy(int? id) {
-    return dbHelper.watchObjectLazy(id);
-  }
-
+  Future<int> update(T item);
   @override
   Stream<void> watchLazy() {
     return dbHelper.watchLazy();
   }
 
   @override
-  Future<int> update(Type item);
-  @override
-  Future<int> add(Type item);
-  @override
-  Future<List<int>> addMany(List<Type> itemList);
+  Stream<void> watchObjectLazy(int? id) {
+    return dbHelper.watchObjectLazy(id);
+  }
 }
