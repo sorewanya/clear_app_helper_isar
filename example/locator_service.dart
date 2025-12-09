@@ -4,7 +4,7 @@ import 'package:clear_app_helper_isar/core/datasources/isar/isar_init.dart';
 import 'package:clear_app_helper_isar/core/i18n/isar_i18n.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/settings_description_local_data_sources.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/settings_local_data_sources.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar_community/isar.dart';
 
@@ -14,7 +14,7 @@ void init() {
   getIt
     ..registerLazySingleton<IsarI18n>(IsarI18nRu.new)
     ..registerLazySingleton<IsarInit>(
-      () => IsarInit(prefsHelper: getIt(), schemas: getIt(), dbFileName: 'kopotproject'),
+      () => IsarInit(prefsHelper: getIt(), schemas: getIt(), dbFileName: 'kopotproject', inspector: kDebugMode),
     )
     ..registerLazySingleton<List<CollectionSchema<dynamic>>>(
       () => [
