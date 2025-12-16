@@ -18,19 +18,6 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../clear_app_helper/example/locator_service.dart';
 
-class RouteNames extends SettingsRouteNames {
-  static String get searchPage => '/searchPage';
-
-  ///
-  static String get settingsInfoPage => SettingsRouteNames.settingsInfoPage;
-  static String get settingsViewPage => SettingsRouteNames.settingsViewPage;
-  static String get settingsDetailPage => SettingsRouteNames.settingsDetailPage;
-
-  ///TODO add your pages
-}
-
-final isarInit = getIt<IsarInit>();
-final prefsHelper = getIt<SharedPreferencesHelper>();
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   init(); //from locator_service.dart
@@ -48,6 +35,9 @@ void main(List<String> args) async {
   await initializeDateFormatting('en').then((_) => runApp(const MyApp())); //TODO replace en with your language
 }
 
+final isarInit = getIt<IsarInit>();
+final prefsHelper = getIt<SharedPreferencesHelper>();
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -55,18 +45,30 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+class RouteNames extends SettingsRouteNames {
+  static String get searchPage => '/searchPage';
+
+  static String get settingsDetailPage => SettingsRouteNames.settingsDetailPage;
+
+  ///
+  static String get settingsInfoPage => SettingsRouteNames.settingsInfoPage;
+  static String get settingsViewPage => SettingsRouteNames.settingsViewPage;
+
+  ///TODO add your pages
+}
+
 class _MyAppState extends State<MyApp> {
   String? isarDBdirectory;
   @override
   Widget build(BuildContext context) {
     Future<Widget> checkDB() async {
-      isarDBdirectory = prefsHelper.prefs.getString('isarDBdirectory');
+      isarDBdirectory = prefsHelper.getString('isarDBdirectory');
       if (isarDBdirectory == null) {
         final Directory dir = await getApplicationDocumentsDirectory();
         return IsarDbChoicePage(
           isarDBdirectory: '${dir.path}/.isarDB',
           sharedPreferencesHelper: prefsHelper,
-          setDirectory: () => setState(() {
+          setDirectory: () async => setState(() {
             isarDBdirectory = '_';
           }),
         );

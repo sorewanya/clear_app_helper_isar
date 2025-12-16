@@ -73,7 +73,7 @@ class IsarInit {
     // final bool useExternalStorage = false;
     // final externalDir = await getExternalStorageDirectory();
     final Directory dir = await getApplicationDocumentsDirectory();
-    final String isarDBdirectory = _prefsHelper.prefs.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
+    final String isarDBdirectory = _prefsHelper.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
 
     _schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
 
