@@ -44,3 +44,4 @@ app.*.map.json
 
 pubspec.lock
 *.g.dart
+*.mocks.dart
