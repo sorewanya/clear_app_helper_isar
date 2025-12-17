@@ -7,5 +7,6 @@ class IsarI18nRu implements IsarI18n {
   String get isarDbChoicePathButton => 'Выбрать другое место хранения.';
   String get isarDbChoicePathConfirmButton => 'Подтвердить место хранения.';
   String get isarDbChoiceTitle => 'Пожалуйста, укажите путь хранения БД!\nЕсли у вас есть файлы БД укажите папку где хранится .isar файл';
+  String get notWindowWarning => 'Невозможно изменить папку по умолчанию на платформе, отличной от Windows';
   String get storageIsDeniedWarning => 'Доступ к хранилищу запрещен!';
 }

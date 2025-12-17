@@ -43,7 +43,8 @@ void main() {
     final selectedPath = '/selected/path';
 
     when(mockAppFilePicker.getDirectoryPath()).thenAnswer((_) async => selectedPath);
-    when(mockAppPermission.request()).thenAnswer((_) async => PermissionStatus.granted);
+    when(mockAppPermission.storageRequest()).thenAnswer((_) async => PermissionStatus.granted);
+    when(mockAppPermission.canWriteToDirectory(any)).thenAnswer((_) async => true);
     when(mockPrefsHelper.setString('isarDBdirectory', selectedPath)).thenAnswer((_) async => true);
 
     await tester.pumpWidget(
@@ -74,6 +75,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
 
+    expect(find.text(GetIt.instance<IsarI18n>().storageIsDeniedWarning), findsNothing);
     expect(callbackCalled, isTrue);
 
     // Verify shared preferences saved and callback called
@@ -82,7 +84,8 @@ void main() {
 
   testWidgets('Shows warning when storage permission denied', (tester) async {
     // Arrange
-    when(mockAppPermission.request()).thenAnswer((_) async => PermissionStatus.denied);
+    when(mockAppPermission.storageRequest()).thenAnswer((_) async => PermissionStatus.denied);
+    when(mockAppPermission.canWriteToDirectory(any)).thenAnswer((_) async => false);
 
     // Act
     await tester.pumpWidget(
@@ -95,6 +98,7 @@ void main() {
 
     // Assert
     await tester.pump(); // permission future resolved
+    await tester.pumpAndSettle(); // permission future resolved
     expect(find.text(GetIt.instance<IsarI18n>().storageIsDeniedWarning), findsOneWidget);
   });
 }

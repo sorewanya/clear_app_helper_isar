@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:clear_app_helper/core/domain/entities/app_file_picker.dart';
+import 'package:clear_app_helper/core/domain/entities/app_permission.dart';
 import 'package:clear_app_helper/core/i18n/core_i18n.dart';
 import 'package:clear_app_helper/core/presentation/theme_data.dart';
 import 'package:clear_app_helper/core/presentation/widgets/my_scaffold_widget.dart';
@@ -8,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// This widget is used to choose the Isar DB directory.
+/// Used when the Isar DB is not initialized yet.
+/// Allows the user to choose a directory for the Isar DB.
+/// Also checks for storage permissions.
 class IsarDbChoicePage extends StatefulWidget {
   const IsarDbChoicePage({
     required this.isarDBdirectory,
@@ -26,8 +33,7 @@ class IsarDbChoicePage extends StatefulWidget {
 class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
   String isarDBdirectory = '';
   SharedPreferencesHelper? prefsHelper;
-
-  ///FIXME добавь проверку папки на возможность записи!
+  late bool storageRequestGranted;
 
   @override
   Widget build(BuildContext context) {
@@ -41,34 +47,32 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
           children: [
             Text(GetIt.instance<IsarI18n>().isarDbChoiceTitle),
             Text('${GetIt.instance<IsarI18n>().isarDbChoiceDefaultPathTopic}: $isarDBdirectory'),
-            FutureBuilder(
-              future: Permission.storage.request().isDenied,
-              builder: (context, asyncSnapshot) {
-                return asyncSnapshot.data == false
-                    ? SizedBox()
-                    : Text(GetIt.instance<IsarI18n>().storageIsDeniedWarning);
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                GetIt.instance<AppFilePicker>().getDirectoryPath().then((value) {
-                  if (value != null) {
-                    if (mounted) {
-                      setState(() {
+            if (!storageRequestGranted) Text(GetIt.instance<IsarI18n>().storageIsDeniedWarning),
+            if (Platform.isWindows)
+              TextButton(
+                onPressed: () async {
+                  await GetIt.instance<AppFilePicker>().getDirectoryPath().then((value) async {
+                    if (value != null) {
+                      if (mounted) {
                         isarDBdirectory = value;
-                      });
+                        storageRequestGranted = false;
+                        await _checkStoragePermission();
+                        setState(() {});
+                      }
                     }
-                  }
-                });
-              },
-              child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathButton),
-            ),
+                  });
+                },
+                child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathButton),
+              ),
+            if (Platform.isWindows) Text(GetIt.instance<IsarI18n>().notWindowWarning),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: () async {
-                await prefsHelper?.setString('isarDBdirectory', isarDBdirectory);
-                await widget.setDirectory();
-              },
+              onPressed: storageRequestGranted
+                  ? () async {
+                      await prefsHelper?.setString('isarDBdirectory', isarDBdirectory);
+                      await widget.setDirectory();
+                    }
+                  : null,
               child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathConfirmButton),
             ),
           ],
@@ -81,6 +85,18 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
   void initState() {
     prefsHelper = widget.sharedPreferencesHelper;
     isarDBdirectory = widget.isarDBdirectory;
+    storageRequestGranted = false;
+    _checkStoragePermission();
     super.initState();
+  }
+
+  Future<void> _checkStoragePermission() async {
+    final permissionStatus = await GetIt.I<AppPermission>().storageRequest();
+    final canWriteToDirectory = await GetIt.I<AppPermission>().canWriteToDirectory(isarDBdirectory);
+    if (mounted && permissionStatus != null) {
+      setState(() {
+        storageRequestGranted = !permissionStatus.isDenied && canWriteToDirectory;
+      });
+    }
   }
 }
