@@ -26,7 +26,7 @@ void main() {
     mockAppFilePicker = MockAppFilePicker();
     mockAppPermission = MockAppPermission();
     mockPrefsHelper = MockSharedPreferencesHelper();
-    final getIt = GetIt.instance
+    GetIt.instance
       ..registerSingleton<CoreI18n>(CoreI18n())
       ..registerSingleton<IsarI18n>(IsarI18n())
       ..registerSingleton<AppFilePicker>(mockAppFilePicker)
