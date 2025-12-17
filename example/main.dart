@@ -7,14 +7,15 @@
 ///
 import 'dart:io';
 
+import 'package:clear_app_helper/core/domain/entities/app_path_provider.dart';
 import 'package:clear_app_helper/core/presentation/widgets/loading_indicator.dart';
 import 'package:clear_app_helper/core/settings_route_names.dart';
 import 'package:clear_app_helper/shared_preferences.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_init.dart';
 import 'package:clear_app_helper_isar/core/presentation/isar_db_choice_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../clear_app_helper/example/locator_service.dart';
 
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     Future<Widget> checkDB() async {
       isarDBdirectory = prefsHelper.getString('isarDBdirectory');
       if (isarDBdirectory == null) {
-        final Directory dir = await getApplicationDocumentsDirectory();
+        final Directory dir = await GetIt.I<AppPathProvider>().getApplicationDocumentsDirectory();
         return IsarDbChoicePage(
           isarDBdirectory: '${dir.path}/.isarDB',
           sharedPreferencesHelper: prefsHelper,

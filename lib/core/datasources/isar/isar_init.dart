@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:clear_app_helper/core/domain/entities/app_path_provider.dart';
 import 'package:clear_app_helper/shared_preferences.dart';
 import 'package:clear_app_helper_isar/core/datasources/isar/isar_settings_helper.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_description_model.dart';
 import 'package:clear_app_helper_isar/settings/data/datasource/isar/isar_settings_model.dart';
+import 'package:get_it/get_it.dart';
 import 'package:isar_community/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 class IsarInit {
   factory IsarInit({
@@ -72,7 +73,7 @@ class IsarInit {
     //TODO todo external storage support
     // final bool useExternalStorage = false;
     // final externalDir = await getExternalStorageDirectory();
-    final Directory dir = await getApplicationDocumentsDirectory();
+    final Directory dir = await GetIt.I<AppPathProvider>().getApplicationDocumentsDirectory();
     final String isarDBdirectory = _prefsHelper.getString('isarDBdirectory') ?? '${dir.path}/.isarDB';
 
     _schemas.addAll([IsarSettingsSchema, IsarSettingsLogSchema, IsarSettingsDescriptionSchema]);
