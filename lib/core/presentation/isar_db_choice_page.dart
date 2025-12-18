@@ -64,7 +64,7 @@ class _IsarDbChoiceWidgetState extends State<IsarDbChoicePage> {
                 },
                 child: Text(GetIt.instance<IsarI18n>().isarDbChoicePathButton),
               ),
-            if (Platform.isWindows) Text(GetIt.instance<IsarI18n>().notWindowWarning),
+            if (!Platform.isWindows) Text(GetIt.instance<IsarI18n>().notWindowWarning),
             const SizedBox(height: 10),
             TextButton(
               onPressed: storageRequestGranted
